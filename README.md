@@ -7,6 +7,7 @@ Librerias utilizadas:
 - Otras librerias estandar: os, numpy, time
 
 `$ pip install -U selenium`
+`$ pip install opencv-python pytesseract`
 
 Caracteristicas
 
