@@ -63,8 +63,8 @@ class karelmain:
 
     def contestar_problemas(self):
         self.driver.get(self.urlproblema + str(self.numerodeproblema))
-        htmlBtnEnviarProblema = self.driver.find_element(By.XPATH, "/html/body/div/div[1]/div/button[7]")
-        htmlBtnEnviarProblema.click()
+        # htmlBtnEnviarProblema = self.driver.find_element(By.XPATH, "/html/body/div/div[1]/div/button[7]")
+        # htmlBtnEnviarProblema.click()
         #img_input = self.driver.find_element(By.XPATH, self.xpath_img_input)
         self.descargar_imagen()
         #img_output = self.driver.find_element(By.XPATH, self.xpath_img_output)
@@ -73,8 +73,7 @@ class karelmain:
         self.driver.quit()
 
     #Metodo constructor
-    def __init__(self, correo, contrasena, iniciar_problemas_en):
-        self.numerodeproblema = iniciar_problemas_en
+    def __init__(self, correo, contrasena):
         self.iniciar_sesion(correo, contrasena)
 
 correo = "l22480942@nuevoleon.tecnm.mx"
@@ -82,18 +81,21 @@ contrasena = 'GjzcSX*Z"t3K^S6'
 inicio_de_problema = 12
 terminar_problemas_en = 15
 
+karelmain(correo, contrasena)
 for ejercicio in range (inicio_de_problema, terminar_problemas_en):
     try:
+        
         print(ejercicio)
-        karelmain(correo, contrasena, ejercicio).contestar_problemas()
+        karelmain.numerodeproblema = ejercicio
+        karelmain.contestar_problemas()
         # ejercicio = str(numerodeproblema + n)
         # karelurl = urlproblema + ejercicio
         # driver.get(karelurl)
         # htmlBtnEnviarProblema = driver.find_element(By.XPATH, "/html/body/div/div[1]/div/button[7]")
         # htmlBtnEnviarProblema.click()
-        print("Ejercicio " + karelmain.numerodeproblema + ": " + karelmain.urlproblema + " Resuelto")
+        print("Ejercicio " + str(karelmain.numerodeproblema) + ": " + str(karelmain.urlproblema) + " Resuelto")
     except Exception as e:
-        print("Ejercicio " + karelmain.numerodeproblema + ": " + karelmain.urlproblema + " no encontrado o no se puede acceder")
+        print("Ejercicio " + str(karelmain.numerodeproblema) + ": " + str(karelmain.urlproblema) + " no encontrado o no se puede acceder")
 
-a = input("TERMINADDO")
+a = input("TERMINADO")
 karelmain.terminar()
