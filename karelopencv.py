@@ -24,8 +24,6 @@ class karelopencv():
     y_cells_unique = None
     cell_size_x = None
     cell_size_y = None
-    primera_celda_x = None
-    primera_celda_y = None
     numeros_verdes = {}
     numeros_grises = {}
 
@@ -41,6 +39,7 @@ class karelopencv():
         self.nombre_de_imagen = nombre_de_imagen
         self.numeros_verdes = {}
         self.numeros_grises = {}
+        self.beepers = {}
 
     def obtenertablero(self):
         gray = cv2.cvtColor(self.preimagen, cv2.COLOR_BGR2GRAY)
@@ -340,12 +339,19 @@ class karelopencv():
         #cv2.imshow("Karelhsv", self.hsv)
 
     def guardarResultados(self):
+        #Junta los numeros para obtener todos los beepers
+        beepers = self.numeros_grises | self.numeros_verdes
+        print("beepers: ")
+        print(beepers)
+
         nuevo_directorio = "KarelAssets/" + self.numero_ejercicio
         if not os.path.exists(nuevo_directorio):
             os.makedirs(nuevo_directorio)
-        with open(nuevo_directorio + "/" + self.numero_ejercicio + self.nombre_de_imagen + " numerosverdes.txt", 'a') as file:
-            file.write(str(self.numeros_verdes))
-        
+        # with crea un nuevo archivo si el archivo no existe
+        # es mas seguro porque cierra automaticamente el archivo
+        with open(nuevo_directorio + "/" + self.numero_ejercicio + self.nombre_de_imagen + " beepers.txt", 'w') as file:
+            file.write(str(beepers))
+    
         cv2.imwrite(nuevo_directorio + "/" + self.numero_ejercicio + self.nombre_de_imagen + " opencv hsv.png", self.hsv)
         cv2.imwrite(nuevo_directorio + "/" + self.numero_ejercicio + self.nombre_de_imagen + " opencv.png", self.img)
         cv2.waitKey(0)
@@ -377,7 +383,7 @@ class karelopencv():
     def __init__(self, imgpath, numero_de_ejericio, nombre_de_imagen):
         self.cargarImagen(imgpath, numero_de_ejericio, nombre_de_imagen)
 
-numero_ejercicio = "12"
+numero_ejercicio = "357"
 nombre_de_imagen = "input"
 nombre_de_imagen2 = "output"
 imgpath = "KarelAssets/" + numero_ejercicio + "/" + numero_ejercicio + nombre_de_imagen + ".png"
