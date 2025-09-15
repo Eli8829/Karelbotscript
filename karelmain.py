@@ -9,10 +9,8 @@ import time
 #https://sites.google.com/chromium.org/driver/
 #https://googlechromelabs.github.io/chrome-for-testing/
 
-class karelmain:
-    service = Service(executable_path="C:/chromedriver.exe")
-    driver = webdriver.Chrome(service = service)
-    driver.get("https://plataforma.karelogic.net/login")
+class karelmain():
+    driver = None
 
     urlproblema = "https://plataforma.karelogic.net/resolver/"
     numerodeproblema = None
@@ -65,15 +63,16 @@ class karelmain:
         self.driver.get(self.urlproblema + str(self.numerodeproblema))
         # htmlBtnEnviarProblema = self.driver.find_element(By.XPATH, "/html/body/div/div[1]/div/button[7]")
         # htmlBtnEnviarProblema.click()
-        #img_input = self.driver.find_element(By.XPATH, self.xpath_img_input)
         self.descargar_imagen()
-        #img_output = self.driver.find_element(By.XPATH, self.xpath_img_output)
     
     def terminar(self):
         self.driver.quit()
 
     #Metodo constructor
     def __init__(self, correo, contrasena):
+        service = Service(executable_path="C:/chromedriver.exe")
+        driver = webdriver.Chrome(service = service)
+        self.driver = driver
         self.iniciar_sesion(correo, contrasena)
 
 correo = "l22480942@nuevoleon.tecnm.mx"
@@ -81,21 +80,17 @@ contrasena = 'GjzcSX*Z"t3K^S6'
 inicio_de_problema = 12
 terminar_problemas_en = 15
 
-karelmain(correo, contrasena)
+main = karelmain(correo, contrasena)
 for ejercicio in range (inicio_de_problema, terminar_problemas_en):
     try:
         
         print(ejercicio)
-        karelmain.numerodeproblema = ejercicio
-        karelmain.contestar_problemas()
-        # ejercicio = str(numerodeproblema + n)
-        # karelurl = urlproblema + ejercicio
-        # driver.get(karelurl)
-        # htmlBtnEnviarProblema = driver.find_element(By.XPATH, "/html/body/div/div[1]/div/button[7]")
-        # htmlBtnEnviarProblema.click()
+        main.numerodeproblema = ejercicio
+        main.contestar_problemas()
         print("Ejercicio " + str(karelmain.numerodeproblema) + ": " + str(karelmain.urlproblema) + " Resuelto")
     except Exception as e:
         print("Ejercicio " + str(karelmain.numerodeproblema) + ": " + str(karelmain.urlproblema) + " no encontrado o no se puede acceder")
+        print(e)
 
-a = input("TERMINADO")
-karelmain.terminar()
+a = input("TERMINADO, PRESIONE ENTER PARA CONTINUAR")
+main.terminar()
