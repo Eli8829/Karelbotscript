@@ -14,6 +14,9 @@ class karelmain():
     urlproblema = "https://plataforma.karelogic.net/resolver/"
     numerodeproblema = None
     xpath_img_base = "/html/body/div/div[2]/div/div[1]/div[1]/div[2]/p"
+    xpath_textarea_codigo = "/html/body/div/div[2]/div/div[2]/div/div/div[2]/div[1]/div/div[1]/textarea"
+    xpath_btn_enviarproblema = "/html/body/div/div[1]/div/button[7]"
+    xpath_btn_ejecutarproblema = "ejecutar"
     nombredeproblema = ["input.png", "output.png"]
     
     def descargar_imagen(self):
@@ -51,8 +54,31 @@ class karelmain():
                     print("La imagen no tiene un formato Base64 reconocido en su 'src'.")
             except Exception as e:
                 # Si la imagen no se encuentra en el párrafo actual, continúa con el siguiente
-                print(f"Imagen no encontrada en el párrafo {i+1}. Revisando el siguiente.")
+                #print(f"Imagen no encontrada en el párrafo {i+1}. Revisando el siguiente.")
                 continue
+
+    def editar_codigo(self, codigo):
+        try:
+            self.driver.execute_script("""
+                var editor = document.querySelector('.CodeMirror').CodeMirror;
+                editor.setValue(arguments[0]);
+            """, codigo)
+            print("Codigo editado correctamente")
+        except Exception as e:
+            print("--------------MENSAJE DE ERROR---------------")
+            print("editar_codigo()")
+            print(e)
+            print("OCURRIO UN ERROR")
+
+    def obtener_codigo(self):
+        try:
+            codigo = self.driver.execute_script("""return document.getElementById("editor").value""")
+            return codigo
+        except Exception as e:
+            print("--------------MENSAJE DE ERROR---------------")
+            print("obtener_codigo()")
+            print(e)
+            print("OCURRIO UN ERROR")
 
     def crear_directorio(self):
         nuevo_directorio = "KarelAssets/" + str(self.numerodeproblema)
@@ -68,9 +94,21 @@ class karelmain():
 
     def contestar_problemas(self):
         self.driver.get(self.urlproblema + str(self.numerodeproblema))
-        # htmlBtnEnviarProblema = self.driver.find_element(By.XPATH, "/html/body/div/div[1]/div/button[7]")
-        # htmlBtnEnviarProblema.click()
-        self.descargar_imagen()
+        #self.descargar_imagen()
+        #self.editar_codigo("asdfasdf")
+        codigo = self.obtener_codigo()
+        print(codigo)
+        with open("Karel_Codigobase.txt", "w") as file:
+            file.write(codigo)
+        self.ejecutar_problema()
+    
+    def enviar_problema(self):
+        htmlBtnEnviarProblema = self.driver.find_element(By.XPATH, self.xpath_btn_enviarproblema)
+        htmlBtnEnviarProblema.click()
+
+    def ejecutar_problema(self):
+        htmlBtnEjecutarProblema = self.driver.find_element(By.ID, self.xpath_btn_ejecutarproblema)
+        htmlBtnEjecutarProblema.click()
     
     def terminar(self):
         self.driver.quit()
@@ -85,13 +123,13 @@ class karelmain():
 correo = "l22480942@nuevoleon.tecnm.mx"
 contrasena = 'GjzcSX*Z"t3K^S6'
 inicio_de_problema = 16
-terminar_problemas_en = 20
+terminar_problemas_en = 17
 
 main = karelmain(correo, contrasena)
 for ejercicio in range (inicio_de_problema, terminar_problemas_en):
     try:
         
-        print(ejercicio)
+        print("Contestando ejercicio: " + str(ejercicio))
         main.numerodeproblema = ejercicio
         main.contestar_problemas()
         print("Ejercicio " + str(main.numerodeproblema) + ": " + str(main.urlproblema) + " Resuelto")
